@@ -135,103 +135,98 @@ function patch(label, old, replacement) {
   console.log("  OK (" + occurrences + "x): " + label);
 }
 
-// ===========================================================================
-// PATCH 1: Output Efficiency — the single biggest offender
-// ===========================================================================
+// Patches 1-3: brevity rules in main system prompt.
+// Fixed upstream in v2.1.100; kept in case an older version is installed.
 patch(
-  "Output efficiency IMPORTANT line",
-  "IMPORTANT: Go straight to the point. Try the simplest approach first without going in circles. Do not overdo it. Be extra concise.",
-  "IMPORTANT: Go straight to the point without going in circles. Choose the approach that correctly and completely solves the problem. Do not add unnecessary complexity, but do not sacrifice correctness or completeness for the sake of simplicity either."
+    "#1  Output efficiency (fixed upstream v2.1.100)",
+    "IMPORTANT: Go straight to the point. Try the simplest approach first without going in circles. Do not overdo it. Be extra concise.",
+    "IMPORTANT: Go straight to the point without going in circles. Choose the approach that correctly and completely solves the problem. Do not add unnecessary complexity, but do not sacrifice correctness or completeness for the sake of simplicity either."
 );
 
-// ===========================================================================
-// PATCH 2: Decouple communication brevity from work quality
-// ===========================================================================
 patch(
-  "Output efficiency brevity paragraph",
-  "Keep your text output brief and direct. Lead with the answer or action, not the reasoning. Skip filler words, preamble, and unnecessary transitions. Do not restate what the user said \u2014 just do it. When explaining, include only what is necessary for the user to understand.",
-  "Keep your text output brief and direct. Skip filler words, preamble, and unnecessary transitions. Do not restate what the user said \u2014 just do it. When explaining, include what is necessary for the user to understand. Note: these communication guidelines apply to your messages to the user, NOT to the thoroughness of your code changes or investigation depth."
+    "#2  Brevity paragraph (fixed upstream v2.1.100)",
+    "Keep your text output brief and direct. Lead with the answer or action, not the reasoning. Skip filler words, preamble, and unnecessary transitions. Do not restate what the user said \u2014 just do it. When explaining, include only what is necessary for the user to understand.",
+    "Keep your text output brief and direct. Skip filler words, preamble, and unnecessary transitions. Do not restate what the user said \u2014 just do it. When explaining, include what is necessary for the user to understand. Note: these communication guidelines apply to your messages to the user, NOT to the thoroughness of your code changes or investigation depth."
 );
 
-// ===========================================================================
-// PATCH 3: Remove "one sentence" brevity hammer
-// ===========================================================================
 patch(
-  "One sentence rule",
-  "If you can say it in one sentence, don\u0027t use three. Prefer short, direct sentences over long explanations. This does not apply to code or tool calls.",
-  "Prefer short, direct sentences over long explanations in your messages. This does not apply to code, tool calls, or the thoroughness of your implementation work."
+    "#3  One sentence rule (fixed upstream v2.1.100)",
+    "If you can say it in one sentence, don\u0027t use three. Prefer short, direct sentences over long explanations. This does not apply to code or tool calls.",
+    "Prefer short, direct sentences over long explanations in your messages. This does not apply to code, tool calls, or the thoroughness of your implementation work."
 );
 
-// ===========================================================================
-// PATCH 4: Anti-gold-plating — allow necessary related work
-// ===========================================================================
+// Patches 4-11: still present in v2.1.109+.
 patch(
-  "Anti-gold-plating paragraph",
-  "Don\u0027t add features, refactor code, or make \"improvements\" beyond what was asked. A bug fix doesn\u0027t need surrounding code cleaned up. A simple feature doesn\u0027t need extra configurability. Don\u0027t add docstrings, comments, or type annotations to code you didn\u0027t change. Only add comments where the logic isn\u0027t self-evident.",
-  "Don\u0027t add unrelated features or speculative improvements. However, if adjacent code is broken, fragile, or directly contributes to the problem being solved, fix it as part of the task. A bug fix should address related issues discovered during investigation. Don\u0027t add docstrings, comments, or type annotations to code you didn\u0027t change. Only add comments where the logic isn\u0027t self-evident."
+    "#4  Anti-gold-plating — allow necessary related work",
+    "Don\u0027t add features, refactor code, or make \"improvements\" beyond what was asked. A bug fix doesn\u0027t need surrounding code cleaned up. A simple feature doesn\u0027t need extra configurability. Don\u0027t add docstrings, comments, or type annotations to code you didn\u0027t change. Only add comments where the logic isn\u0027t self-evident.",
+    "Don\u0027t add unrelated features or speculative improvements. However, if adjacent code is broken, fragile, or directly contributes to the problem being solved, fix it as part of the task. A bug fix should address related issues discovered during investigation. Don\u0027t add docstrings, comments, or type annotations to code you didn\u0027t change. Only add comments where the logic isn\u0027t self-evident."
 );
 
-// ===========================================================================
-// PATCH 5: Error handling — stop telling the model to skip it
-// ===========================================================================
 patch(
-  "Skip error handling instruction",
-  "Don\u0027t add error handling, fallbacks, or validation for scenarios that can\u0027t happen. Trust internal code and framework guarantees. Only validate at system boundaries (user input, external APIs). Don\u0027t use feature flags or backwards-compatibility shims when you can just change the code.",
-  "Add error handling and validation at real boundaries where failures can realistically occur (user input, external APIs, I/O, network). Trust internal code and framework guarantees for truly internal paths. Don\u0027t use feature flags or backwards-compatibility shims when you can just change the code."
+    "#5  Error handling — use judgment instead of blanket skip",
+    "Don\u0027t add error handling, fallbacks, or validation for scenarios that can\u0027t happen. Trust internal code and framework guarantees. Only validate at system boundaries (user input, external APIs). Don\u0027t use feature flags or backwards-compatibility shims when you can just change the code.",
+    "Add error handling and validation at real boundaries where failures can realistically occur (user input, external APIs, I/O, network). Trust internal code and framework guarantees for truly internal paths. Don\u0027t use feature flags or backwards-compatibility shims when you can just change the code."
 );
 
-// ===========================================================================
-// PATCH 6: Remove "three lines better than abstraction" rule
-// ===========================================================================
 patch(
-  "Three lines rule",
-  "Three similar lines of code is better than a premature abstraction.",
-  "Use judgment about when to extract shared logic. Avoid premature abstractions for hypothetical reuse, but do extract when duplication causes real maintenance risk."
+    "#6  Three lines rule — use judgment",
+    "Three similar lines of code is better than a premature abstraction.",
+    "Use judgment about when to extract shared logic. Avoid premature abstractions for hypothetical reuse, but do extract when duplication causes real maintenance risk."
 );
 
-// ===========================================================================
-// PATCH 7: Subagent addendum — strengthen completeness over gold-plate fear
-// ===========================================================================
 patch(
-  "Subagent gold-plate instruction",
-  "Complete the task fully\u2014don\u0027t gold-plate, but don\u0027t leave it half-done.",
-  "Complete the task fully and thoroughly. Do the work that a careful senior developer would do, including edge cases and fixing obviously related issues you discover. Don\u0027t add purely cosmetic or speculative improvements unrelated to the task."
+    "#7  Gold-plate subagent — work like a senior dev",
+    "Complete the task fully\u2014don\u0027t gold-plate, but don\u0027t leave it half-done.",
+    "Complete the task fully and thoroughly. Do the work that a careful senior developer would do, including edge cases and fixing obviously related issues you discover. Don\u0027t add purely cosmetic or speculative improvements unrelated to the task."
 );
 
-// ===========================================================================
-// PATCH 8: Explore agent — remove speed-over-thoroughness bias
-// ===========================================================================
 patch(
-  "Explore agent speed note",
-  "NOTE: You are meant to be a fast agent that returns output as quickly as possible. In order to achieve this you must:\n- Make efficient use of the tools that you have at your disposal: be smart about how you search for files and implementations\n- Wherever possible you should try to spawn multiple parallel tool calls for grepping and reading files\n\nComplete the user\u0027s search request efficiently and report your findings clearly.",
-  "NOTE: Be thorough in your exploration. Use efficient search strategies but do not sacrifice completeness for speed:\n- Make efficient use of the tools that you have at your disposal: be smart about how you search for files and implementations\n- Wherever possible you should try to spawn multiple parallel tool calls for grepping and reading files\n- When the caller requests \"very thorough\" exploration, exhaust all reasonable search strategies before reporting\n\nComplete the user\u0027s search request thoroughly and report your findings clearly."
+    "#8  Explore agent — thoroughness over speed",
+    "NOTE: You are meant to be a fast agent that returns output as quickly as possible. In order to achieve this you must:\n- Make efficient use of the tools that you have at your disposal: be smart about how you search for files and implementations\n- Wherever possible you should try to spawn multiple parallel tool calls for grepping and reading files\n\nComplete the user\u0027s search request efficiently and report your findings clearly.",
+    "NOTE: Be thorough in your exploration. Use efficient search strategies but do not sacrifice completeness for speed:\n- Make efficient use of the tools that you have at your disposal: be smart about how you search for files and implementations\n- Wherever possible you should try to spawn multiple parallel tool calls for grepping and reading files\n- When the caller requests thorough exploration, exhaust all reasonable search strategies before reporting\n\nComplete the user\u0027s search request thoroughly and report your findings clearly."
 );
 
-// ===========================================================================
-// PATCH 9: Tone — remove redundant "short and concise"
-// ===========================================================================
 patch(
-  "Short and concise in tone",
-  "Your responses should be short and concise.",
-  "Your responses should be clear and appropriately detailed for the complexity of the task."
+    "#9  Tone — appropriate detail, not just short",
+    "Your responses should be short and concise.",
+    "Your responses should be clear and appropriately detailed for the complexity of the task."
 );
 
-// ===========================================================================
-// PATCH 10: Subagent output — stop suppressing code context
-// ===========================================================================
 patch(
-  "Subagent code snippet suppression",
-  "Include code snippets only when the exact text is load-bearing (e.g., a bug you found, a function signature the caller asked for) \u2014 do not recap code you merely read.",
-  "Include code snippets when they provide useful context (e.g., bugs found, function signatures, relevant patterns, code that informs the decision). Summarize rather than quoting large blocks verbatim."
+    "#10 Subagent output — allow useful code context",
+    "Include code snippets only when the exact text is load-bearing",
+    "Include code snippets when they provide useful context"
 );
 
-// ===========================================================================
-// PATCH 11: Scope matching — allow necessary adjacent work
-// ===========================================================================
 patch(
-  "Match scope instruction",
-  "Match the scope of your actions to what was actually requested.",
-  "Match the scope of your actions to what was actually requested, but do address closely related issues you discover during the work when fixing them is clearly the right thing to do."
+    "#11 Scope matching — allow necessary adjacent work",
+    "Match the scope of your actions to what was actually requested.",
+    "Match the scope of your actions to what was actually requested, but do address closely related issues you discover during the work when fixing them is clearly the right thing to do."
+);
+
+// Patches 12-15: new targets in v2.1.109+.
+patch(
+    "#12 Thinking suppression — remove anti-thinking bias",
+    "on simpler user messages, it\u0027s best to respond or act directly without thinking unless further reasoning is necessary. On more complex tasks, you should feel free to reason as much as needed for best results but without overthinking. Avoid unnecessary thinking in response to simple user messages.",
+    "Think as much as is useful for the task. Err on the side of more thinking when the task is non-trivial, when correctness matters, or when there is any ambiguity. Use thinking to plan your approach, catch errors, and verify your work before acting."
+);
+
+patch(
+    "#13 End-of-turn summary — scale to complexity",
+    "End-of-turn summary: one or two sentences. What changed and what\u0027s next. Nothing else.\n\nMatch responses to the task: a simple question gets a direct answer, not headers and sections.",
+    "End-of-turn summary: briefly describe what changed and what\u0027s next. Scale the detail to the complexity of the work \u2014 a one-line fix gets one sentence, a multi-file refactor deserves a paragraph. Include caveats, partial completions, or discoveries the user should know about.\n\nMatch responses to the task: a simple question gets a direct answer, not headers and sections."
+);
+
+patch(
+    "#14 Code comments — use judgment instead of blanket ban",
+    "In code: default to writing no comments. Never write multi-paragraph docstrings or multi-line comment blocks \u2014 one short line max. Don\u0027t create planning, decision, or analysis documents unless the user asks for them \u2014 work from conversation context, not intermediate files.",
+    "In code: prefer self-documenting code over comments. Add comments where the logic is non-obvious or where a future reader would need context about why, not what. Keep docstrings focused but not artificially short. Don\u0027t create planning, decision, or analysis documents unless the user asks for them \u2014 work from conversation context, not intermediate files."
+);
+
+patch(
+    "#15 Subagent report quality — allow richer reports",
+    "the caller will relay this to the user, so it only needs the essentials.",
+    "the caller will relay this to the user. Include the essentials plus any discoveries, caveats, or context that would help the caller make good decisions."
 );
 
 // ===========================================================================
